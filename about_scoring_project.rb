@@ -29,8 +29,45 @@ require File.expand_path(File.dirname(__FILE__) + '/neo')
 #
 # Your goal is to write the score method.
 
+def sort_numbers(dice)
+  dice = dice.sort
+  hash_numbers = {}
+  dice.each do |number|
+    if hash_numbers[number]
+      hash_numbers[number] = hash_numbers[number].push(number)
+    else
+      hash_numbers[number] = [number]
+    end
+  end
+  hash_numbers
+end
+
 def score(dice)
   # You need to write this method
+  total_score = 0
+  if dice.length > 0
+    hash_numbers = sort_numbers(dice)
+    hash_numbers.each do |number, numbers|
+      while hash_numbers[number].length >= 3
+        if number == 1
+          total_score += 1000
+        else
+          total_score += number * 100
+        end
+        hash_numbers[number].pop(3)
+      end
+      while hash_numbers[number].length > 0
+        if number == 1
+          total_score += hash_numbers[number].length * 100
+        end
+        if number == 5
+          total_score += hash_numbers[number].length * 50
+        end
+        hash_numbers[number].pop(hash_numbers[number].length)
+      end
+    end
+  end
+  return total_score
 end
 
 class AboutScoringProject < Neo::Koan
